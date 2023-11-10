@@ -2,28 +2,59 @@ package com.myproject.gwt.client;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.*;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.ui.DecoratorPanel;
+import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class MyWebApp implements EntryPoint {
-	    private DecoratorPanel introDecoratorPanel = new DecoratorPanel();
-	    private VerticalPanel introPanel = new VerticalPanel();
-	    private VerticalPanel sideSortPanel = new VerticalPanel();
-	    private HorizontalPanel sortPanel = new HorizontalPanel();
-	    private FlexTable numbersTable = new FlexTable();
-	    private TextBox inputBox = new TextBox();
-	    private Button enterButton = new Button("Enter");
-	    private Button sortButton = new Button("Sort");
-	    private Button resetButton = new Button("Reset");
-	    private Label questionLabel = new Label("How many numbers to display?");
-	    private List<Integer> numbers = new ArrayList<>();
-	    private int maxNumbersPerColumn = 10;
-	    private boolean descendingSort = true;
+	
+	private DecoratorPanel introDecoratorPanel;
+    private VerticalPanel introPanel;
+    private VerticalPanel sideSortPanel;
+    private HorizontalPanel sortPanel;
+    private FlexTable numbersTable;
+    private TextBox inputBox;
+    private Button enterButton;
+    private Button sortButton;
+    private Button resetButton;
+    private Label questionLabel;
+    private List<Integer> numbers;
+    private int maxNumbersPerColumn;
+    private int maxNumbersSize;
+    private int maxGeneratedNumberValue;
+    private boolean descendingSort;
 
+    public MyWebApp() {
+        introDecoratorPanel = new DecoratorPanel();
+        introPanel = new VerticalPanel();
+        sideSortPanel = new VerticalPanel();
+        sortPanel = new HorizontalPanel();
+        numbersTable = new FlexTable();
+        inputBox = new TextBox();
+        enterButton = new Button("Enter");
+        sortButton = new Button("Sort");
+        resetButton = new Button("Reset");
+        questionLabel = new Label("How many numbers to display?");
+        numbers = new ArrayList<>();
+        maxNumbersPerColumn = 10;
+        maxNumbersSize = 100;
+        maxGeneratedNumberValue = 1001;
+        descendingSort = true;
+    }
+    
 	    public void onModuleLoad() {
 	    	initClickHandlers();
 	    	showIntroScreen();
@@ -33,7 +64,7 @@ public class MyWebApp implements EntryPoint {
 	    	enterButton.addClickHandler(new ClickHandler() {
 	            public void onClick(ClickEvent event) {
 	                int numbersSize = Integer.parseInt(inputBox.getText());
-	                if (numbersSize > 0 && numbersSize <= 100) {
+	                if (numbersSize > 0 && numbersSize <= maxNumbersSize) {
 	                	showSortScreen(numbersSize);
 	                } else {
 	                    Window.alert("Please enter a number between 1 and 100.");
@@ -91,15 +122,15 @@ public class MyWebApp implements EntryPoint {
 	    
 	    private void generateRandomNumbers(int numNumbers) {
 	    	numbers.clear(); 
-    	    boolean hasValueLessThanOrEqualTo30 = false;
+    	    boolean containsNumberThreshold = false;
     	    for (int i = 0; i < numNumbers; i++) {
-    	        int randomNumber = (int) (Math.random() * 1001); 
+    	        int randomNumber = (int) (Math.random() * maxGeneratedNumberValue); 
     	        numbers.add(randomNumber);
     	        if (randomNumber <= 30) {
-    	            hasValueLessThanOrEqualTo30 = true;
+    	        	containsNumberThreshold = true;
     	        }
     	    }
-    	    if (!hasValueLessThanOrEqualTo30) {
+    	    if (!containsNumberThreshold) {
     	        numbers.set((int) (Math.random() * numNumbers), (int) (Math.random() * 31));
     	    }
 	    }	

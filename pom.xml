@@ -25,7 +25,7 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- ensure all GWT deps use the same version (unless overridden) -->
+		  <!-- ensure all GWT deps use the same version (unless overridden) -->
       <dependency>
         <groupId>org.gwtproject</groupId>
         <artifactId>gwt</artifactId>
