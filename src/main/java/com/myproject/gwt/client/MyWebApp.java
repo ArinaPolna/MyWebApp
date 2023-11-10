@@ -20,8 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyWebApp implements EntryPoint {
-	
-	private DecoratorPanel introDecoratorPanel;
+    private DecoratorPanel introDecoratorPanel;
     private VerticalPanel introPanel;
     private VerticalPanel sideSortPanel;
     private HorizontalPanel sortPanel;
