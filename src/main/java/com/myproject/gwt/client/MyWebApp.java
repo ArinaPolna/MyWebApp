@@ -3,8 +3,6 @@ package com.myproject.gwt.client;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.DecoratorPanel;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -15,26 +13,34 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import java.util.Random;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Entry point for the GWT application. Initializes the application and sets up the intro screen.
+ */
+
 public class MyWebApp implements EntryPoint {
+	private static final int MAX_THRESHOLD_VALUE_FOR_RANDOM_NUMBERS_ELEMENT = 31;
+	private static final int MAX_NUMBERS_PER_COLUMN = 10;
+	private static final int MAX_NUMBERS_SIZE = 100;
+	private static final int MIN_NUMBERS_SIZE = 1;
+	private static final int MAX_GENERATED_NUMBER_VALUE = 1001;
 	
-	private DecoratorPanel introDecoratorPanel;
-    private VerticalPanel introPanel;
-    private VerticalPanel sideSortPanel;
-    private HorizontalPanel sortPanel;
-    private FlexTable numbersTable;
-    private TextBox inputBox;
-    private Button enterButton;
-    private Button sortButton;
-    private Button resetButton;
-    private Label questionLabel;
-    private List<Integer> numbers;
-    private int maxNumbersPerColumn;
-    private int maxNumbersSize;
-    private int maxGeneratedNumberValue;
+	private final DecoratorPanel introDecoratorPanel;
+    private final VerticalPanel introPanel;
+    private final VerticalPanel sideSortPanel;
+    private final HorizontalPanel sortPanel;
+    private final FlexTable numbersTable;
+    private final TextBox inputBox;
+    private final Button enterButton;
+    private final Button sortButton;
+    private final Button resetButton;
+    private final Label questionLabel;
+    private final List<Integer> numbers;
+	private final Random random;
     private boolean descendingSort;
 
     public MyWebApp() {
@@ -49,46 +55,46 @@ public class MyWebApp implements EntryPoint {
         resetButton = new Button("Reset");
         questionLabel = new Label("How many numbers to display?");
         numbers = new ArrayList<>();
-        maxNumbersPerColumn = 10;
-        maxNumbersSize = 100;
-        maxGeneratedNumberValue = 1001;
+		random = new Random();
         descendingSort = true;
     }
     
+    /**
+     * Initializes the application and sets up click handlers for buttons.
+     */
 	    public void onModuleLoad() {
 	    	initClickHandlers();
 	    	showIntroScreen();
 	    }
 	    
+	    /**
+	     * Initializes click handlers for the enter, sort, and reset buttons.
+	     */
 	    private void initClickHandlers() {
-	    	enterButton.addClickHandler(new ClickHandler() {
-	            public void onClick(ClickEvent event) {
-	                int numbersSize = Integer.parseInt(inputBox.getText());
-	                if (numbersSize > 0 && numbersSize <= maxNumbersSize) {
-	                	showSortScreen(numbersSize);
-	                } else {
-	                    Window.alert("Please enter a number between 1 and 100.");
-	                }
-	            }
-	        });
-	    	sortButton.addClickHandler(new ClickHandler() {
-	            public void onClick(ClickEvent event) {
-	                sortNumbers();
-	            }
-	        });
-	        resetButton.addClickHandler(new ClickHandler() {
-	            public void onClick(ClickEvent event) {
-	            	showIntroScreen();
-	            }
-	        });
+	    	enterButton.addClickHandler(event -> {
+				int numbersSize = Integer.parseInt(inputBox.getText());
+				if (numbersSize >= MIN_NUMBERS_SIZE && numbersSize <= MAX_NUMBERS_SIZE) {
+					showSortScreen(numbersSize);
+				} else {
+					Window.alert("Please enter a number between 1 and 100.");
+				}
+			});
+	    	sortButton.addClickHandler(event -> sortNumbers());
+	        resetButton.addClickHandler(event -> showIntroScreen());
 	    }
 	    
+	    /**
+	     * Displays the intro screen.
+	     */
 	    private void showIntroScreen() {
 			RootPanel.get().clear();
             initIntroScreen();
             RootPanel.get().add(introDecoratorPanel);
 		}
 	    
+	    /**
+	     * Initializes the components (input box, enter button and question for user) for the intro screen.
+	     */
 	    private void initIntroScreen() {
 	    	introPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 	    	introPanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_MIDDLE);
@@ -102,6 +108,11 @@ public class MyWebApp implements EntryPoint {
 	    	introDecoratorPanel.setWidget(introPanel);
 	    }
 	    
+	    /**
+	     * Displays the sort screen with a specified number of random numbers.
+	     *
+	     * @param numNumbers The number of random numbers to display.
+	     */
 	    private void showSortScreen(int numNumbers) {
 		    RootPanel.get().clear();
     	    generateRandomNumbers(numNumbers);
@@ -110,6 +121,9 @@ public class MyWebApp implements EntryPoint {
             RootPanel.get().add(sortPanel);
 		}
 	    
+	    /**
+	     * Initializes the components (numbers table, sort and reset buttons) for the sort screen
+	     */
 	    private void initSortScreen() {
 	    	 updateNumbersTable();
 	    	 sortButton.setStyleName("sortScreenButton");
@@ -120,44 +134,51 @@ public class MyWebApp implements EntryPoint {
 	    	 sortPanel.add(sideSortPanel);
 	    }
 	    
+	    /**
+	     * Generates list of random numbers based on input user's info
+	     */
 	    private void generateRandomNumbers(int numNumbers) {
 	    	numbers.clear(); 
     	    boolean containsNumberThreshold = false;
     	    for (int i = 0; i < numNumbers; i++) {
-    	        int randomNumber = (int) (Math.random() * maxGeneratedNumberValue); 
+    	        int randomNumber = random.nextInt(MAX_GENERATED_NUMBER_VALUE);
     	        numbers.add(randomNumber);
     	        if (randomNumber <= 30) {
     	        	containsNumberThreshold = true;
     	        }
     	    }
     	    if (!containsNumberThreshold) {
-    	        numbers.set((int) (Math.random() * numNumbers), (int) (Math.random() * 31));
+    	        numbers.set(random.nextInt(numNumbers), random.nextInt(MAX_THRESHOLD_VALUE_FOR_RANDOM_NUMBERS_ELEMENT));
     	    }
 	    }	
 	    
+	    /**
+	     * Changes order of numbers on the screen
+	     */
 	    private void updateNumbersTable() {
 	        numbersTable.clear();
 	        for (int i = 0; i < numbers.size(); i++) {
-	            int column = i / maxNumbersPerColumn;
-	            int row = i % maxNumbersPerColumn;
+	            int column = i / MAX_NUMBERS_PER_COLUMN;
+	            int row = i % MAX_NUMBERS_PER_COLUMN;
 	            Button numberButton = new Button(numbers.get(i).toString());
 	            numberButton.setStyleName("numberButton");
-	            numberButton.addClickHandler(new ClickHandler() {
-		            public void onClick(ClickEvent event) {
-		                    int clickedValue = Integer.parseInt(numberButton.getText());
-		                    if(clickedValue == 0) {
-		                    	showIntroScreen();
-		                    } else if (clickedValue > 0 && clickedValue <= 30) {
-		                    	showSortScreen(clickedValue);
-		                    } else {
-		                        Window.alert("Please select a value smaller or equal to 30.");
-		                    }
-		            }
-		        });
+	            numberButton.addClickHandler(event -> {
+						int clickedValue = Integer.parseInt(numberButton.getText());
+						if(clickedValue == 0) {
+							showIntroScreen();
+						} else if (clickedValue > 0 && clickedValue <= 30) {
+							showSortScreen(clickedValue);
+						} else {
+							Window.alert("Please select a value smaller or equal to 30.");
+						}
+				});
 	            numbersTable.setWidget(row, column, numberButton);
 	        }
 	    }
 	    
+	    /**
+	     * Sorts numbers in the numbers list
+	     */
 	    private void sortNumbers() {
 	    	if (descendingSort) {
 	            quickSortDescending(numbers, 0, numbers.size() - 1);
