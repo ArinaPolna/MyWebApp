@@ -29,7 +29,7 @@ public class MyWebApp implements EntryPoint {
 	private static final int MIN_NUMBERS_SIZE = 1;
 	private static final int MAX_GENERATED_NUMBER_VALUE = 1001;
 	
-	private final DecoratorPanel introDecoratorPanel;
+    private final DecoratorPanel introDecoratorPanel;
     private final VerticalPanel introPanel;
     private final VerticalPanel sideSortPanel;
     private final HorizontalPanel sortPanel;
