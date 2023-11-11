@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Entry point for the GWT application. Initializes the application and sets up the intro screen.
+ * Entry point for the GWT application. Initializes the application and sets up the intro screen
  */
 
 public class MyWebApp implements EntryPoint {
@@ -60,7 +60,7 @@ public class MyWebApp implements EntryPoint {
     }
     
     /**
-     * Initializes the application and sets up click handlers for buttons.
+     * Initializes the application and sets up click handlers for buttons
      */
 	    public void onModuleLoad() {
 	    	initClickHandlers();
@@ -68,7 +68,7 @@ public class MyWebApp implements EntryPoint {
 	    }
 	    
 	    /**
-	     * Initializes click handlers for the enter, sort, and reset buttons.
+	     * Initializes click handlers for the enter, sort and reset buttons
 	     */
 	    private void initClickHandlers() {
 	    	enterButton.addClickHandler(event -> {
@@ -93,7 +93,7 @@ public class MyWebApp implements EntryPoint {
 		}
 	    
 	    /**
-	     * Initializes the components (input box, enter button and question for user) for the intro screen.
+	     * Initializes the components (input box, enter button and question for user) for the intro screen
 	     */
 	    private void initIntroScreen() {
 	    	introPanel.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
@@ -109,7 +109,7 @@ public class MyWebApp implements EntryPoint {
 	    }
 	    
 	    /**
-	     * Displays the sort screen with a specified number of random numbers.
+	     * Displays the sort screen with a specified number of random numbers
 	     *
 	     * @param numNumbers The number of random numbers to display.
 	     */
